@@ -31,8 +31,8 @@ export async function POST(request: NextRequest) {
         email,
         name: name || email.split("@")[0],
         password: hashedPassword,
-        status: "pending",
-        category: "Pos-graduando",
+        status: "approved",
+        category: "admin",
       },
     });
 
