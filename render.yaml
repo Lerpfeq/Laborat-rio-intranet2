@@ -31,4 +31,4 @@ services:
     ipAllowList: []
     postgreSQL:
       name: lerp_intranet
-      user: postgres
+      user: postgreslerp
