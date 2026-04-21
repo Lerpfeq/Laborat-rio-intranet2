@@ -2,7 +2,7 @@ services:
   - type: web
     name: lerp-intranet
     env: node
-    buildCommand: "cd nextjs_space && yarn install && yarn prisma generate && yarn build"
+   buildCommand: "cd nextjs_space && yarn install --production=false && yarn prisma generate && yarn build"
     startCommand: "cd nextjs_space && yarn start"
     regions:
       - sa-east-1
