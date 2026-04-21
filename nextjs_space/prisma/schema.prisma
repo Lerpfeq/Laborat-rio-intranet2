@@ -5,7 +5,7 @@ generator client {
 
 datasource db {
     provider = "postgresql"
-    url      = env("postgresql://postgreslerp:0QDiqhuaHloLtUYEdTlVl7OY2cfZKrNF@dpg-d7ju5ipf9bms73aohr10-a.oregon-postgres.render.com/lerp_intranet")
+    url = env("DATABASE_URL")
 }
 
 model Account {
