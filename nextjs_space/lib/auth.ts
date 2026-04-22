@@ -36,12 +36,6 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Senha incorreta");
         }
 
-        if (user.status !== "approved") {
-          throw new Error(
-            "Usuário aguardando aprovação. Entre em contato com o administrador."
-          );
-        }
-
         return {
           id: user.id,
           email: user.email,
@@ -72,14 +66,7 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
-  async signIn({ user, account }) {
-  return true; // Libera geral
-},
-
-        if (dbUser?.status !== "approved") {
-          return false;
-        }
-      }
+    async signIn({ user, account }) {
       return true;
     },
     async redirect({ url, baseUrl }) {
