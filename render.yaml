@@ -11,10 +11,8 @@ services:
         scope: build
         sync: false
       - key: NEXTAUTH_SECRET
-        scope: build
         sync: false
       - key: NEXTAUTH_URL
-        scope: build
         sync: false
       - key: GOOGLE_CLIENT_ID
         scope: build
