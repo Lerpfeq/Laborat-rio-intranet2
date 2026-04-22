@@ -72,11 +72,9 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
-    async signIn({ user, account }) {
-      if (account?.provider === "google" && user?.email) {
-        const dbUser = await prisma.user.findUnique({
-          where: { email: user.email },
-        });
+  async signIn({ user, account }) {
+  return true; // Libera geral
+},
 
         if (dbUser?.status !== "approved") {
           return false;
