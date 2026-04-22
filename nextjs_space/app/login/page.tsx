@@ -24,6 +24,9 @@ export default function LoginPage() {
         password,
         redirect: false,
       });
+      if (res?.ok) {
+  window.location.href = "/dashboard";
+      }
 
       if (result?.error) {
         setError(result.error);
