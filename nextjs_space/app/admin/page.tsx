@@ -1,4 +1,4 @@
-'use client';
+use client';
 
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -24,6 +24,7 @@ export default function AdminPage() {
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const [newStatus, setNewStatus] = useState('approved');
   const [newCategory, setNewCategory] = useState('Pos-graduando');
+  const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -83,6 +84,48 @@ export default function AdminPage() {
     }
   };
 
+  const handleDeleteUser = async (user: User) => {
+    if (!currentUser?.id) {
+      return;
+    }
+
+    if (user.id === currentUser.id) {
+      alert('Você não pode excluir seu próprio usuário.');
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Tem certeza que deseja excluir o usuário ${user.name || user.email || user.id}? Esta ação não pode ser desfeita.`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setDeletingUserId(user.id);
+
+    try {
+      const res = await fetch(`/api/users/${user.id}`, {
+        method: 'DELETE',
+      });
+
+      const payload = await res.json();
+
+      if (!res.ok) {
+        alert(payload?.error || 'Não foi possível excluir o usuário.');
+        return;
+      }
+
+      setUsers((prevUsers) => prevUsers.filter((item) => item.id !== user.id));
+      alert('Usuário excluído com sucesso.');
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      alert('Erro inesperado ao excluir usuário.');
+    } finally {
+      setDeletingUserId(null);
+    }
+  };
+
   if (status === 'loading' || loading) {
     return <div style={{ padding: '2rem' }}>Carregando...</div>;
   }
@@ -136,12 +179,30 @@ export default function AdminPage() {
                 <td><span className={`status-badge status-${user.status}`}>{user.status}</span></td>
                 <td>{new Date(user.createdAt).toLocaleDateString('pt-BR')}</td>
                 <td>
-                  <button
-                    onClick={() => setSelectedUser(user.id)}
-                    style={{ padding: '0.5rem', background: '#3498db', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
-                  >
-                    Editar
-                  </button>
+                  <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                    <button
+                      onClick={() => setSelectedUser(user.id)}
+                      style={{ padding: '0.5rem', background: '#3498db', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                    >
+                      Editar
+                    </button>
+                    <button
+                      onClick={() => handleDeleteUser(user)}
+                      disabled={deletingUserId === user.id || currentUser?.id === user.id}
+                      style={{
+                        padding: '0.5rem',
+                        background: currentUser?.id === user.id ? '#b3b3b3' : '#e74c3c',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: currentUser?.id === user.id ? 'not-allowed' : 'pointer',
+                        opacity: deletingUserId === user.id ? 0.7 : 1,
+                      }}
+                      title={currentUser?.id === user.id ? 'Você não pode excluir seu próprio usuário' : 'Excluir usuário'}
+                    >
+                      {deletingUserId === user.id ? 'Excluindo...' : 'Excluir'}
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
