@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
         name: name || email.split("@")[0],
         password: hashedPassword,
         status: "approved",
-        category: "admin",
+        category: "Admin",
       },
     });
 
