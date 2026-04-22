@@ -33,7 +33,6 @@ export async function POST(request: NextRequest) {
         password: hashedPassword,
         status: "approved",
         category: "admin",
-        role: "admin",
       },
     });
 
